@@ -1,12 +1,18 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
  
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
  
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Container from '@material-ui/core/Container';
+
 const PasswordForgetPage = () => (
   <div>
-    <h1>PasswordForget</h1>
     <PasswordForgetForm />
   </div>
 );
@@ -44,24 +50,47 @@ class PasswordForgetFormBase extends Component {
  
   render() {
     const { email, error } = this.state;
- 
-    const isInvalid = email === '';
- 
+
+
     return (
-      <form onSubmit={this.onSubmit}>
-        <input
-          name="email"
-          value={this.state.email}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Email Address"
-        />
-        <button disabled={isInvalid} type="submit">
-          Reset My Password
-        </button>
- 
-        {error && <p>{error.message}</p>}
-      </form>
+      <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div >        
+        <Typography component="h1" variant="h5">
+          Forget Password
+        </Typography>
+        <form onSubmit={this.onSubmit}  noValidate>
+          <Grid container spacing={2} >                        
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                value={this.state.email}
+                onChange={this.onChange}
+                autoComplete="email"
+              />
+            </Grid>            
+          </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"               
+            >
+              Reset Password
+            </Button>
+
+            {error && <p>{error.message}</p>}
+        </form>
+      </div>
+
+    </Container>
+
+     
     );
   }
 }

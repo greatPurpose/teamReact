@@ -1,13 +1,20 @@
 import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
  
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Container from '@material-ui/core/Container';
+
 const SignUpPage = () => (
   <div>
-    <h1>SignUp</h1>
     <SignUpForm  />
   </div>
 );
@@ -60,63 +67,104 @@ class SignUpFormBase extends Component {
         username,
         email,
         passwordOne,
-        passwordTwo,
-        error,
+        passwordTwo
       } = this.state;
 
-      const isInvalid =
-            passwordOne !== passwordTwo ||
-            passwordOne === '' ||
-            email === '' ||
-            username === '';
- 
       
     return (
-      <form onSubmit={this.onSubmit}>
-        <input
-          name="username"
-          value={username}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Full Name"
-        />
-        <input
-          name="email"
-          value={email}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Email Address"
-        />
-        <input
-          name="passwordOne"
-          value={passwordOne}
-          onChange={this.onChange}
-          type="password"
-          placeholder="Password"
-        />
-        <input
-          name="passwordTwo"
-          value={passwordTwo}
-          onChange={this.onChange}
-          type="password"
-          placeholder="Confirm Password"
-        />
-        <button disabled={isInvalid} type="submit">Sign Up</button>
- 
-        {error && <p>{error.message}</p>}
-      </form>
+      <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div >        
+        <Typography component="h1" variant="h5">
+          Sign up
+        </Typography>
+        <form onSubmit={this.onSubmit}  noValidate>
+          <Grid container spacing={2} >            
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="fullName"
+                label="Full Name"
+                name="username"
+                value={username}
+                onChange={this.onChange}
+                autoComplete="lname"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                value={email}
+                onChange={this.onChange}
+                autoComplete="email"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="passwordOne"
+                value={passwordOne}
+                onChange={this.onChange}
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="passwordTwo"
+                value={passwordTwo}
+                onChange={this.onChange}
+                label="Confirm Password"
+                type="password"
+                id="twopassword"
+                autoComplete="confirm-password"
+              />
+            </Grid>
+          </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"               
+            >
+              Sign Up
+            </Button>
+
+          <Grid container justify="flex-end">
+            <Grid item>
+              <Link href={ROUTES.SIGN_IN} variant="body2">
+                Already have an account? Sign in
+              </Link>
+            </Grid>
+          </Grid>
+        </form>
+      </div>
+
+    </Container>
+
+      
     );
   }
 }
  
-const SignUpLink = () => (
-  <p>
-    Don't have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
-  </p>
-);
+
  
 const SignUpForm  = compose( withRouter,withFirebase)(SignUpFormBase);
 
 export default SignUpPage;
  
-export { SignUpForm, SignUpLink };
+export { SignUpForm };
