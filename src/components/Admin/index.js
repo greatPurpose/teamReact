@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import { withFirebase } from '../Firebase';
- 
+import { DataGrid } from '@material-ui/data-grid';
+import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
+
 class AdminPage extends Component {
   constructor(props) {
     super(props);
@@ -35,33 +38,35 @@ class AdminPage extends Component {
   render() {
     const { users, loading } = this.state;
 
-    return (
-      <div>
-        <h1>Admin</h1>
-        {loading && <div>Loading ...</div>}
- 
-        <UserList users={users} />
-      </div>
+    var i = 1;
+    users.forEach(et => {
+      et.id = i++;
+    });
+
+    return (      
+        <Container component="main" maxWidth="xl">
+          <CssBaseline />
+          <div >        
+            {loading && <div>Loading ...</div>}
+    
+            <UserList users={users} />
+          </div>
+      </Container>
     );
   }
 }
  
+const columns = [
+  {field:'id', headerName: 'ID', width: 40},
+  {field:'email', headerName: 'Email', width: 200},
+  {field:'username', headerName: 'UserName', width: 200},
+];
+
 const UserList = ({ users }) => (
-  <ul>
-    {users.map(user => (
-      <li key={user.uid}>
-        <span>
-          <strong>ID:</strong> {user.uid}
-        </span>
-        <span>
-          <strong>E-Mail:</strong> {user.email}
-        </span>
-        <span>
-          <strong>Username:</strong> {user.username}
-        </span>
-      </li>
-    ))}
-  </ul>
+  
+  <div style={{ height: 400, width: '100%' }}>
+      <DataGrid rows={users} columns={columns} pageSize={5} />
+    </div>
 );
 
 export default withFirebase(AdminPage);

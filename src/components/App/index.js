@@ -13,6 +13,7 @@ import { withFirebase } from '../Firebase';
 
 import * as ROUTES from '../../constants/routes';
 import { withAuthentication } from '../Session';
+import SignOutButton from '../SignOut';
 
 class App extends Component {
     constructor(props) {
@@ -48,6 +49,7 @@ class App extends Component {
                         <Route path={ROUTES.HOME} component={HomePage} />
                         <Route path={ROUTES.ACCOUNT} component={AccountPage} />
                         <Route path={ROUTES.ADMIN} component={AdminPage} />
+                        <Route path={ROUTES.SIGN_OUT} component={SignOutButton} />
                     </div>            
                 </Router>
             

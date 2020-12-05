@@ -1,16 +1,23 @@
 import React from 'react';
 import { AuthUserContext, withAuthorization } from '../Session';
 import { PasswordForgetForm } from '../PasswordForget';
-import PasswordChangeForm from '../PasswordChange';
- 
+import Typography from '@material-ui/core/Typography';
+import Container from '@material-ui/core/Container';
+import CssBaseline from '@material-ui/core/CssBaseline';
+
 const AccountPage = () => (
   <AuthUserContext.Consumer>
     {authUser => (
-      <div>
-        <h1>Account: {authUser.email}</h1>
-        <PasswordForgetForm />
-        <PasswordChangeForm />
-      </div>
+       <Container component="main" maxWidth="xs">
+       <CssBaseline />
+        <div>
+        <Typography component="h1" variant="h5">
+          Account: {authUser.email}
+        </Typography>
+        <CssBaseline />
+          <PasswordForgetForm />
+        </div>
+      </Container>
     )}
   </AuthUserContext.Consumer>
 );
