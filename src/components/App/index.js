@@ -8,6 +8,9 @@ import PasswordForgetPage from '../PasswordForget';
 import HomePage from '../Home';
 import AccountPage from '../Account';
 import AdminPage from '../Admin';
+import Create from '../Admin/create';
+import Edit from '../Admin/edit';
+import Show from '../Admin/show';
 import { withFirebase } from '../Firebase';
 
 
@@ -50,6 +53,10 @@ class App extends Component {
                         <Route path={ROUTES.ACCOUNT} component={AccountPage} />
                         <Route path={ROUTES.ADMIN} component={AdminPage} />
                         <Route path={ROUTES.SIGN_OUT} component={SignOutButton} />
+                        <Route path= {ROUTES.CARD_EDIT} component={Edit} />
+                        <Route path={ROUTES.CARD_CREATE} component={Create} />
+                        <Route path={ROUTES.CARD_SHOW} component={Show} />
+
                     </div>            
                 </Router>
             

@@ -1,17 +1,18 @@
 import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
+import 'firebase/firestore';
 
 const firebaseConfig = {
-    apiKey: process.env.REACT_APP_API_KEY,
-    authDomain: process.env.REACT_APP_AUTH_DOMAIN,
-    databaseURL: process.env.REACT_APP_DATABASE_URL,
-    projectId: process.env.REACT_APP_PROJECT_ID,
-    storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
-    messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
-    appId: process.env.REAT_APP_ID,
-    measurementId: process.env.REACT_APP_MESSURERE_MENTID
+  apiKey: "AIzaSyDepb7GYtXfJI_Y_wY19JdZUZjQUq2jOcM",
+  authDomain: "testreact-1b67a.firebaseapp.com",
+  projectId: "testreact-1b67a",
+  storageBucket: "testreact-1b67a.appspot.com",
+  messagingSenderId: "1008317364132",
+  appId: "1:1008317364132:web:46ee507d0df6127ee07331",
+  measurementId: "G-XZVKBPGVCD"
   };
+
 
 class Firebase {
   constructor() {
@@ -33,6 +34,11 @@ class Firebase {
 
     user = uid => this.db.ref(`users/${uid}`); 
     users = () => this.db.ref('users');
+
+    card = cid => this.db.ref(`cards/${cid}`);
+    cards = () => this.db.ref('cards');
+
+
 }
 
 export default Firebase;

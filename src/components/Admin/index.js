@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import { withFirebase } from '../Firebase';
 import { DataGrid } from '@material-ui/data-grid';
-import Container from '@material-ui/core/Container';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import { Link } from 'react-router-dom';
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 
 class AdminPage extends Component {
   constructor(props) {
@@ -10,63 +10,76 @@ class AdminPage extends Component {
  
     this.state = {
       loading: false,
-      users: [],
+      cards: [],
     };
   }
- 
-  componentWillUnmount() {
-    this.props.firebase.users().off();
+
+  omponentWillUnmount() {
+    this.props.firebase.cards().off();
   }
 
   componentDidMount() {
     this.setState({ loading: true });
  
-    this.props.firebase.users().on('value', snapshot => {
-      const usersObject = snapshot.val();
- 
-      const usersList = Object.keys(usersObject).map(key => ({
-        ...usersObject[key],
-        uid: key,
-      }));
-      this.setState({
-        users: usersList,
-        loading: false,
-      });
+    
+    this.props.firebase.cards().on('value', snapshot => {
+      const cardObject = snapshot.val();
+      if (cardObject != null)
+      {
+        const cardList = Object.keys(cardObject).map(key => ({
+          ...cardObject[key],
+          uid: key,
+        }));
+        
+        this.setState({
+          cards: cardList,
+          loading: false,
+        });
+
+      }
+      
     });
   }
- 
+
   render() {
-    const { users, loading } = this.state;
-
-    var i = 1;
-    users.forEach(et => {
-      et.id = i++;
-    });
-
-    return (      
-        <Container component="main" maxWidth="xl">
-          <CssBaseline />
-          <div >        
-            {loading && <div>Loading ...</div>}
-    
-            <UserList users={users} />
+    return (
+      <div className="container">
+        <div className="panel panel-default">
+          <div className="panel-heading">
+            <h3 className="panel-title">
+              BOARD LIST
+            </h3>
           </div>
-      </Container>
+          <h4><Link to="/create">Add Board</Link></h4>
+          <div className="panel-body">
+          <TableContainer component={Paper}>
+      <Table aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Title</TableCell>
+            <TableCell >Description</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {this.state.cards.map((board, idx) =>
+          <TableRow key={idx}>
+            <TableCell component="th" scope="row">
+              <Link to={`/show/${board.uid}`}>{board.title}</Link>
+              </TableCell>
+              <TableCell >
+                {board.description}
+              </TableCell>
+          </TableRow>             
+            )}
+        </TableBody>
+        </Table>
+        </TableContainer>
+            
+          </div>
+        </div>
+      </div>
     );
   }
 }
  
-const columns = [
-  {field:'id', headerName: 'ID', width: 40},
-  {field:'email', headerName: 'Email', width: 200},
-  {field:'username', headerName: 'UserName', width: 200},
-];
-
-const UserList = ({ users }) => (
-  
-  <div style={{ height: 400, width: '100%' }}>
-      <DataGrid rows={users} columns={columns} pageSize={5} />
-    </div>
-);
-
 export default withFirebase(AdminPage);

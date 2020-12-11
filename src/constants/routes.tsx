@@ -6,3 +6,6 @@ export const ACCOUNT = '/account';
 export const ADMIN = '/admin';
 export const PASSWORD_FORGET = '/pw-forget';
 export const SIGN_OUT = '/signout';
+export const CARD_EDIT = '/edit/:id';
+export const CARD_CREATE = '/create';
+export const CARD_SHOW = '/show/:id';
