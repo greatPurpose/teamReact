@@ -1,20 +1,72 @@
-import React from 'react';
-import { AuthUserContext, withAuthorization } from '../Session';
-import { PasswordForgetForm } from '../PasswordForget';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { Button, Grid, TextField } from '@material-ui/core';
+import React, { Component } from 'react';
 
-const AccountPage = () => (
-  <AuthUserContext.Consumer>
-    {authUser => (
-       <Container component="main" maxWidth="xs">
-         <Typography component="h1" variant="h5">
-          Profile Information
-        </Typography>
-       <CssBaseline />
-        <div>
+import { withFirebase } from '../Firebase';
+import * as ROUTES from '../../constants/routes';
+
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
+
+
+const INITIAL_STATE = {
+  username: '',
+  email: '',
+  passwordOne: '',
+  passwordTwo: '',
+  error: null,
+};
+
+class AccountPage extends Component {
+
+  constructor(props) {
+    super(props); 
+    this.state = { ...INITIAL_STATE };
+  }
+
+  onSubmit = event => {
+    
+    event.preventDefault();
+
+    const {  passwordOne } = this.state;
+ 
+    this.props.firebase
+      .doPasswordUpdate( passwordOne)
+      .then(() => {
+        this.setState({ ...INITIAL_STATE });
+        this.props.history.push(ROUTES.LANDING);
+      })
+      .catch(error => {
+        this.setState({ error });
+      });
+ 
+  }
+ 
+  onChange = event => {
+    this.setState({ [event.target.name]: event.target.value }); 
+  };
+
+  componentDidMount() {
+    this.props.firebase.currentuser().on('value', snapshot=>{
+      const userObj = snapshot.val();
+      if (userObj!= null) {        
+        this.setState({
+          username: userObj.username,
+          email: userObj.email          
+        }) 
+      }
+    })
+  }
+ 
+  render() {
+    const {username, email, passwordOne, passwordTwo } = this.state;
+
+    return (
+      <Container component="main" maxWidth="xs">
+      <CssBaseline />
+      <div >   
+      <form onSubmit={this.onSubmit}  noValidate>
         <Grid container spacing={2} >                        
             <Grid item xs={12}>
               <TextField
@@ -24,7 +76,7 @@ const AccountPage = () => (
                 id="username"
                 label="User Name"
                 name="username"
-                value={authUser.username}
+                value={username}
                 autoComplete="name"
               />
             </Grid>            
@@ -36,7 +88,7 @@ const AccountPage = () => (
                 id="email"
                 label="Email"
                 name="email"
-                value={authUser.email}
+                value={email}
                 autoComplete="email"
               />
             </Grid>            
@@ -45,10 +97,12 @@ const AccountPage = () => (
                 variant="outlined"
                 required
                 fullWidth
-                id="passwordOne"
+                type="password"
+                id="password"
                 label="Current Password"
                 name="passwordOne"
-                value={authUser.password}
+                value={passwordOne}
+                onChange={this.onChange}
                 autoComplete="current-password"
               />
             </Grid>            
@@ -57,10 +111,12 @@ const AccountPage = () => (
                 variant="outlined"
                 required
                 fullWidth
-                id="passwordTwo"
-                label="Confirm Password"
                 name="passwordTwo"
-                value={authUser.password}
+                value={passwordTwo}
+                onChange={this.onChange}
+                label="Confirm Password"
+                type="password"
+                id="twopassword"
                 autoComplete="confirm-password"
               />
             </Grid>            
@@ -73,12 +129,12 @@ const AccountPage = () => (
             >
               UPDATE
             </Button>
+        </form>
         </div>
       </Container>
-    )}
-  </AuthUserContext.Consumer>
-);
+    );
+  }
+}
  
-const condition = authUser => !!authUser;
  
-export default withAuthorization(condition)(AccountPage);
+export default withFirebase(AccountPage);
