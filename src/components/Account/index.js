@@ -15,6 +15,7 @@ const INITIAL_STATE = {
   email: '',
   passwordOne: '',
   passwordTwo: '',
+  key: '',
   error: null,
 };
 
@@ -29,19 +30,14 @@ class AccountPage extends Component {
     
     event.preventDefault();
 
-    const {  passwordOne } = this.state;
- 
-    this.props.firebase
-      .doPasswordUpdate( passwordOne)
-      .then(() => {
-        this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.LANDING);
-      })
-      .catch(error => {
-        this.setState({ error });
-      });
- 
-  }
+    const { username, email, key } = this.state;
+    
+        this.props.firebase.user(key).set({username, email})
+        .then(() => {      
+          this.setState({ ...INITIAL_STATE });
+          this.props.history.push(ROUTES.LANDING);        
+        });    
+    }
  
   onChange = event => {
     this.setState({ [event.target.name]: event.target.value }); 
@@ -53,7 +49,8 @@ class AccountPage extends Component {
       if (userObj!= null) {        
         this.setState({
           username: userObj.username,
-          email: userObj.email          
+          email: userObj.email,
+          key: this.props.firebase.currentuserkey()
         }) 
       }
     })
